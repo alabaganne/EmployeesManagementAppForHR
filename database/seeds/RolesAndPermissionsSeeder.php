@@ -2,7 +2,11 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use App\User;
 
+$migrationRequiredMessage = ', Please run "php artisan migrate:refresh" before running the seeder again';
 class RolesAndPermissionsSeeder extends Seeder
 {
     /**
@@ -16,28 +20,53 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::create(['name' => 'view collaborators']);
-        Permission::create(['name' => 'add collaborators']);
-        Permission::create(['name' => 'edit collaborators']);
-        Permission::create(['name' => 'delete collaborators']);
-        Permission::create(['name' => 'manage accounts']); // ! specific for the manager (super admin)
+       try {
+            Permission::create(['name' => 'view collaborators']);
+            Permission::create(['name' => 'add collaborators']);
+            Permission::create(['name' => 'edit collaborators']);
+            Permission::create(['name' => 'delete collaborators']);
+            Permission::create(['name' => 'manage accounts']); // ! specific for the manager (super admin)
 
-        // create roles
-        $rh = Role::create(['name' => 'rh']);
-        $project_manager = Role::create(['name' => 'project manager']);
-        $manager = Role::create(['name' => 'manager']);
+        } catch(Throwable $e) {
+            report($e);
+            error_log('ERROR: Permission already exists' . $migrationRequiredMessage);
+            return;
+        }
+        
+        try {
+            // create roles
+            $rh = Role::create(['name' => 'rh']);
+            $project_manager = Role::create(['name' => 'project manager']);
+            $manager = Role::create(['name' => 'manager']);
+        } catch(Throwable $e) {
+            report($e);
+            error_log('ERROR: Role already exists' . $migrationRequiredMessage);
+            return;
+        }
+
 
         // give permissions to roles
-        $rh->givePermissionTo(['view collaborators', 'add collaborators', 'edit collaborators', 'delete collaborators']);
-        $project_manager->givePermissionsTo([]);
-        $manager->givePermissionTo(Permission::all());
+        try {
+            $rh->givePermissionTo(['view collaborators', 'add collaborators', 'edit collaborators', 'delete collaborators']);
+            $project_manager->givePermissionTo([]);
+            $manager->givePermissionTo(Permission::all());
+        } catch(Throwable $e) {
+            report($e);
+            error_log('ERROR: Role already have that permission' . $migrationRequiredMessage);
+            return;
+        }
 
         // assign roles to users
-        User::create(['name' => 'RH', 'email', 'rh@example.com', 'password' => Hash::make('password')])
-            ->syncRoles('rh');
-        User::create(['name' => 'Project Manager', 'email' => 'projectmanager@example.com', 'password' => Hash::make('password')])
-            ->syncRoles('project_manager');
-        User::create(['name' => 'Manager', 'email' => 'manager@example.com', 'password' => Hash::make('password')])
-            ->syncRoles('manager');
+        try {
+            User::create(['name' => 'RH', 'email' => 'rh@example.com', 'password' => Hash::make('password')])
+                ->syncRoles($rh);
+            User::create(['name' => 'Project Manager', 'email' => 'projectmanager@example.com', 'password' => Hash::make('password')])
+                ->syncRoles($project_manager);
+            User::create(['name' => 'Manager', 'email' => 'manager@example.com', 'password' => Hash::make('password')])
+                ->syncRoles($manager);
+        } catch(Throwable $e) {
+            report($e);
+            error_log('ERROR: User already exists' . $migrationRequiredMessage);
+        }
     }
 }

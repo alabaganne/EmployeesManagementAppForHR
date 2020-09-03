@@ -16,7 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email')->unique(); // ? unique
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->date('birth_date')->nullable();
@@ -24,12 +24,11 @@ class CreateUsersTable extends Migration
             $table->string('school')->nullable();
             $table->string('history')->nullable();
             $table->string('position')->nullable();
-            $table->foreignId('department')->constrained()->nullable();
             $table->date('contract_start_date')->nullable();
             $table->date('contract_end_date')->nullable();
             $table->enum('gender', ['male', 'female'])->nullable();
             $table->integer('allowed_leaves')->nullable();
-            $table->string('ncin')->nullable();
+            $table->string('ncin')->unique()->nullable(); // ? unique
             $table->rememberToken();
             $table->timestamps();
         });
@@ -43,5 +42,6 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('users');
+        Schema::dropIfExists('departments'); // ! users table uses the departments table so it has to be deleted first
     }
 }
