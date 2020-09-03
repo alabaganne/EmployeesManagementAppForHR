@@ -21,6 +21,6 @@ Route::group([ 'middleware' => 'api', 'prefix' => 'auth' ], function ($router) {
     Route::get('me', 'AuthController@me');
 });
 
-Route::group([ 'middleware' => 'auth:api', 'prefix' => 'collaborators' ], function($router) {
-    Route::get('/', 'Users/CollaboratorsController@index');
+Route::group([ 'middleware' => 'auth:api', 'prefix' => 'collaborators', 'namespace' => 'Users' ], function($router) {
+    Route::get('/', 'CollaboratorsController@index');
 });

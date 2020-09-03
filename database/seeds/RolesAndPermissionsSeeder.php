@@ -6,9 +6,9 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\User;
 
-$migrationRequiredMessage = ', Please run "php artisan migrate:refresh" before running the seeder again';
 class RolesAndPermissionsSeeder extends Seeder
 {
+    private $migrationRequiredMessage = ', Please run "php artisan migrate:refresh" before running the seeder again';
     /**
      * Run the database seeds.
      *
@@ -29,7 +29,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         } catch(Throwable $e) {
             report($e);
-            error_log('ERROR: Permission already exists' . $migrationRequiredMessage);
+            error_log('ERROR: Permission already exists' . $this->migrationRequiredMessage);
             return;
         }
         
@@ -40,7 +40,7 @@ class RolesAndPermissionsSeeder extends Seeder
             $manager = Role::create(['name' => 'manager']);
         } catch(Throwable $e) {
             report($e);
-            error_log('ERROR: Role already exists' . $migrationRequiredMessage);
+            error_log('ERROR: Role already exists' . $this->migrationRequiredMessage);
             return;
         }
 
@@ -52,7 +52,7 @@ class RolesAndPermissionsSeeder extends Seeder
             $manager->givePermissionTo(Permission::all());
         } catch(Throwable $e) {
             report($e);
-            error_log('ERROR: Role already have that permission' . $migrationRequiredMessage);
+            error_log('ERROR: Role already have that permission' . $this->migrationRequiredMessage);
             return;
         }
 
@@ -66,7 +66,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 ->syncRoles($manager);
         } catch(Throwable $e) {
             report($e);
-            error_log('ERROR: User already exists' . $migrationRequiredMessage);
+            error_log('ERROR: User already exists' . $this->migrationRequiredMessage);
         }
     }
 }
