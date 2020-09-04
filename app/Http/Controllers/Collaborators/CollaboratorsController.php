@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Users;
+namespace App\Http\Controllers\Collaborators;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -13,23 +13,29 @@ $alpha_space_regex = 'regex:/^[a-z A-Z]+$/i';
 class CollaboratorsController extends Controller
 {
     public function index() {
-        $usersWithRoles = UserHasRole::all()->pluck('model_id'); // ? gets all the id of the users with roles
+        $collaborators = User::doesntHave('roles')->get();
 
-        $collaborators = User::whereNotIn('id', $usersWithRoles)->get();
-
-        return response()->json(compact('collaborators'));
+        return response()->json([
+            'users_without_roles' => $users
+        ]);
+    }
+    
+    public function show($user_id) {
+        return response()->json([
+            'collaborator' => User::findOrFail($user_id)
+        ]);
     }
 
     public function store(Request $request) {
-        User::create(
+        $user = User::create(
             $this->validateCollaborator($request)
         );
 
         return response()->json(['message' => 'User successfully created.'], 201);
     }
 
-    public function update($id, Request $request) {
-        User::findOrFail($id)->update(
+    public function update($user_id, Request $request) {
+        User::findOrFail($user_id)->update(
             $this->validateCollaborator($request)
         );
 
@@ -38,8 +44,8 @@ class CollaboratorsController extends Controller
         ], 200);
     }
 
-    public function destroy($id) {
-        User::findOrFail($id)->delete();
+    public function destroy($user_id) {
+        User::findOrFail($user_id)->delete();
 
         return response()->json([
             'message' => 'Collaborator deleted successfully'
@@ -54,6 +60,7 @@ class CollaboratorsController extends Controller
             'phone_number' => 'numeric|size:8',
             'school' => $alpha_space_regex,
             'position' => $alpha_space_regex,
+            'department_id' => 'integer',
             'contract_start_date' => 'date',
             'contract_end_date' => 'date',
             'gender' => Rule::in(['male', 'female']),
