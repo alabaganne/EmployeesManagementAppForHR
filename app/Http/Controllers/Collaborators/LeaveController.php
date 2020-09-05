@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Collaborators;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\User;
+use App\Leave;
+
 class LeavesController extends Controller
 {
     // ! Validate Leave
@@ -18,10 +21,10 @@ class LeavesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($user_id)
+    public function index(User $user)
     {
         return response()->json([
-            'leaves' => Leave::where('user_id', $user_id)->get()
+            'leaves' => Leave::where('user_id', $user->id)->get()
         ]);
     }
 
@@ -31,14 +34,14 @@ class LeavesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $user_id)
+    public function store(Request $request, User $user)
     {
         $validatedData = $this->validateLeave($request);
 
         $leave = new Leave();
 
         $leave->days = $validatedData['days'];
-        $leave->user_id = $user_id;
+        $leave->user_id = $user->id;
 
         $leave->save();
 
@@ -54,12 +57,11 @@ class LeavesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $leave_id)
+    public function update(Request $request, Leave $leave)
     {
-        Leave::findOrFail($leave_id)
-            ->update(
-                $this->validateLeave($request)
-            );
+        $leave->update(
+            $this->validateLeave($request)
+        );
         
         return response()->json([
             'message' => 'Leave updated.'
@@ -72,13 +74,12 @@ class LeavesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($leave_id)
+    public function destroy(Leave $leave)
     {
-        Leave::findOrFail($leave_id)
-            ->delete();
+        $leave->delete();
         
         return response()->json([
             'message' => 'Leave deleted.'
-        ]);
+        ], 200);
     }
 }

@@ -14,42 +14,42 @@ class TrainingsController extends Controller
         ]);
     }
 
-    public function index($user_id) {
+    public function index(User $user) {
         return response()
-            ->json(Training::where('user_id', $user_id)->get(), 200);
+            ->json(Training::where('user_id', $user->id)->get(), 200);
     }
 
-    public function store(Request $request, $user_id) {
+    public function store(Request $request, User $user) {
         $validatedData = $this->validateTraining($request);
         
         $training = new Training();
 
         $training->name = $validatedData['name'];
         $training->duration = $validatedData['duration'];
-        $training->user_id = $user_id;
+        $training->user_id = $user->id;
 
         $training->save();
 
         return response()->json([
-            'message' => 'A training has been created.'
+            'message' => 'Training created.'
         ], 201);
     }
 
-    public function update(Request $request, $training_id) {
-        Training::findOrFail($training_id)
-            ->update(
-                $this->validateTraining($request)
-            );
+    public function update(Request $request, Training $training) {
+        $training->update(
+            $this->validateTraining($request)
+        );
         
         return response()->json([
             'message' => 'Training updated.'
         ], 200);
     }
 
-    public function destroy($training_id) {
-        Training::findOrFail($training_id)
-            ->update(
-                $this->validateTraining($request)
-            );
+    public function destroy(Training $training) {
+        $training->update(
+            $this->validateTraining($request)
+        );
+
+        return response()->json([ 'message' => 'User training deleted.' ], 200);
     }
 }

@@ -21,46 +21,47 @@ Route::group([ 'middleware' => 'api', 'prefix' => 'auth' ], function ($router) {
     Route::get('me', 'AuthController@me');
 });
 
-Route::group([ 'middleware' => 'auth:api', 'prefix' => 'collaborators', 'namespace' => 'Users' ], function($router) {
-    Route::get('', 'CollaboratorsController@index');
-    Route::post('', 'CollaboratorsController@store');
-    Route::prefix('{user_id}')->group(function() {
-        Route::get('', 'CollaboratorsController@show');
-        Route::put('', 'CollaboratorsController@update');
-        Route::delete('', 'CollaboratorsController@destroy');
+Route::group([ 'middleware' => 'auth:api', 'prefix' => 'collaborators', 'namespace' => 'Collaborators' ], function($router) {
+    Route::get('/', 'CollaboratorController@index')->middleware('can:view-collaborator');
+    route::post('/', 'CollaboratorController@store')->middleware('can:add-collaborator');
+    Route::prefix('/{user}')->group(function($router) {
+        Route::delete('/', 'CollaboratorController@destroy')->middleware('can:delete-collaborator');
 
-        Route::prefix('skills')->group(function() {
-            Route::get('', 'SkillsController@index');
-            Route::post('', 'SkillsController@store');
-            Route::prefix('{skill_id}')->group(function() {
-                Route::put('', 'SkillsController@update');
-                Route::delete('', 'SkillsController@destroy'); // /collaborators/{user_id}/skills/{skill_id}
+        Route::middleware('can:edit-collaborator')->group(function($router) {
+            Route::put('/', 'CollaboratorController@update');
+
+            Route::prefix('/trainings')->group(function($router) {
+                Route::get('/', 'TrainingController@index');
+                Route::post('/', 'TrainingController@store');
+                Route::put('/{training}', 'TrainingController@update');
+                Route::delete('/{training}', 'TrainingController@destroy');
             });
-        });
-        Route::prefix('trainings')->group(function() {
-            Route::get('', 'TraningsController@index');
-            Route::post('', 'TraningsController@store');
-            Route::prefix('{training}')->group(function() {
-                Route::put('', 'TraningsController@update');
-                Route::delete('', 'TraningsController@destroy');
+            
+            Route::prefix('/skills')->group(function($router) {
+                Route::get('/', 'SkillController@index');
+                Route::post('/', 'SkillController@store');
+                Route::put('/{skill}', 'SkillController@update');
+                Route::delete('/{skill}', 'SkillController@destroy');  // ? /collaborators/{collaborator_id}/skills/{skill_id}
             });
-        });
-        Route::prefix('evaluations')->group(function() {
-            Route::get('', 'EvaluationssController@index');
-            Route::post('', 'EvaluationssController@store');
-            Route::prefix('{evaluation}')->group(function() {
-                Route::put('', 'EvaluationssController@update');
-                Route::delete('', 'EvaluationssController@destroy');
+    
+            Route::prefix('/evaluations')->group(function($router) {
+                Route::get('/', 'EvaluationController@index');
+                Route::post('/', 'EvaluationController@store');
+                Route::put('/{evaluation}', 'EvaluationController@update');
+                Route::delete('/{evaluation}', 'EvaluationController@destroy');
             });
-        });
-        
-        Route::prefix('leaves')->group(function() {
-            Route::get('', 'LeavesController@index');
-            Route::post('', 'LeavesController@store');
-            Route::prefix('{leave}')->group(function() {
-                Route::put('', 'LeavesController@update');
-                Route::delete('', 'LeavesController@destroy');
+    
+            Route::prefix('leaves')->group(function($router) {
+                Route::get('/', 'LeaveController@index');
+                Route::post('/', 'LeaveController@store');
+                Route::put('/{leave}', 'LeaveController@update');
+                Route::delete('/{leave}', 'LeaveController@destroy');
             });
         });
     });
 });
+
+Route::get('/departments', 'DepartmentController@index');
+Route::post('/departments', 'DepartmentController@store');
+Route::post('/departments/{department}', 'DepartmentController@getUsers');
+Route::delete('/departments/{department}', 'DepartmentController@destroy');

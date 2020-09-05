@@ -21,11 +21,12 @@ class EvaluationsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($user_id)
+    public function index(User $user)
     {
-        return response()->json([
-            'Evaluations' => Evaluation::where('user_id', $user_id)->get()
-        ], 200);
+        return response()->json(
+            Evaluation::where('user_id', $user->id)->get(),
+            200
+        );
     }
 
     /**
@@ -34,7 +35,7 @@ class EvaluationsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $user_id)
+    public function store(Request $request, User $user)
     {
         $validatedData = $this->validateEvaluation($request);
 
@@ -44,13 +45,13 @@ class EvaluationsController extends Controller
         $evaluation->manager = $validatedData['manager'];
         $evaluation->date = $validatedData['date'];
         $evaluation->status = $validatedData['status'];
-        $evaluation->user_id = $user_id;
+        $evaluation->user_id = $user->id;
 
         $evaluation->save();
 
         return response()->json([
-            'message' => 'Evaluation created.'
-        ]);
+            'message' => 'An evaluation has been added for ' . $user->name . '.'
+        ], 201);
     }
 
     /**
@@ -60,15 +61,14 @@ class EvaluationsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $evaluation_id)
+    public function update(Request $request, Evaluation $evaluation)
     {
-        Evaluation::findOrFail($evaluation_id)
-            ->update(
-                $this->validateEvaluation($request)
-            );
+        $evaluation->update(
+            $this->validateEvaluation($request)
+        );
         
         return response()->json([
-            'message' => 'Evaluation updated.'
+            'message' => 'Evaluation has been updated successfully.'
         ], 200);
     }
 
@@ -78,13 +78,12 @@ class EvaluationsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($evaluation_id)
+    public function destroy(User $user, Evaluation $evaluation)
     {
-        Evaluation::findOrFail($evaluation_id)
-            ->delete();
+        $evaluation->delete();
         
         return response()->json([
-            'message' => 'Evaluation deleted.'
-        ]);
+            'message' => 'Evaluation for ' . $user->name . ' has been deleted successfully.'
+        ], 200);
     }
 }

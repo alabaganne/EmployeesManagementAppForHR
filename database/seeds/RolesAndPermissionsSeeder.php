@@ -37,7 +37,7 @@ class RolesAndPermissionsSeeder extends Seeder
             // create roles
             $rh = Role::create(['name' => 'rh']);
             $project_manager = Role::create(['name' => 'project manager']);
-            $manager = Role::create(['name' => 'manager']);
+            $admin = Role::create(['name' => 'admin']);
         } catch(Throwable $e) {
             report($e);
             error_log('ERROR: Role already exists' . $this->migrationRequiredMessage);
@@ -49,7 +49,7 @@ class RolesAndPermissionsSeeder extends Seeder
         try {
             $rh->givePermissionTo(['view collaborators', 'add collaborators', 'edit collaborators', 'delete collaborators']);
             $project_manager->givePermissionTo([]);
-            $manager->givePermissionTo(Permission::all());
+            $admin->givePermissionTo(Permission::all());
         } catch(Throwable $e) {
             report($e);
             error_log('ERROR: Role already have that permission' . $this->migrationRequiredMessage);
@@ -63,7 +63,7 @@ class RolesAndPermissionsSeeder extends Seeder
             User::create(['name' => 'Project Manager', 'email' => 'projectmanager@example.com', 'password' => Hash::make('password')])
                 ->syncRoles($project_manager);
             User::create(['name' => 'Manager', 'email' => 'manager@example.com', 'password' => Hash::make('password')])
-                ->syncRoles($manager);
+                ->syncRoles($admin);
         } catch(Throwable $e) {
             report($e);
             error_log('ERROR: User already exists' . $this->migrationRequiredMessage);
