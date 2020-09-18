@@ -36,9 +36,9 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    // protected $casts = [
+    //     'email_verified_at' => 'datetime',
+    // ];
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -62,7 +62,7 @@ class User extends Authenticatable implements JWTSubject
 
     // ? Check if user is admin
     public function isAdmin() {
-        return $user->hasRole('admin');
+        return $this->hasRole('admin');
     }
 
     // ! Relationships

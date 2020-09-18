@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Collaborators;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class EvaluationsController extends Controller
+class EvaluationController extends Controller
 {
     // ! Validate Evaluation
     private function validateEvaluation($request) {
         return $request->validate([
             'type' => 'required',
-            'manager' => 'required',
+            'manager' => 'required|regex:' . $this->custom_regex,
             'date' => 'required|date',
             'status' => 'required',
         ]);
@@ -85,5 +85,11 @@ class EvaluationsController extends Controller
         return response()->json([
             'message' => 'Evaluation for ' . $user->name . ' has been deleted successfully.'
         ], 200);
+    }
+
+    public function isValid(Request $request) {
+        $this->validateEvaluation($request);
+
+        return response()->json([], 200);
     }
 }

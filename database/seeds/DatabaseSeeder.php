@@ -13,7 +13,10 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RolesAndPermissionsSeeder::class);
 
-        factory(App\Department::class, 5)->create();
+        $departments = ['Web', 'Mobile', 'AI', 'Data Science', 'UI Design'];
+        foreach($departments as $department) {
+            App\Department::create(['name' => $department]);
+        }
         factory(App\User::class, 15)->create();
     }
 }

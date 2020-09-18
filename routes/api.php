@@ -22,11 +22,9 @@ Route::group([ 'middleware' => 'api', 'prefix' => 'auth' ], function ($router) {
 });
 
 Route::group([ 'middleware' => 'auth:api', 'prefix' => 'collaborators', 'namespace' => 'Collaborators' ], function($router) {
-    Route::get('/', 'CollaboratorController@index')->middleware('can:view-collaborator');
-    route::post('/', 'CollaboratorController@store')->middleware('can:add-collaborator');
+    Route::post('/', 'CollaboratorController@index')->middleware('can:view-collaborator');
+    route::post('/create', 'CollaboratorController@store')->middleware('can:add-collaborator'); // ! /api/collaborators/add
     Route::prefix('/{user}')->group(function($router) {
-        Route::delete('/', 'CollaboratorController@destroy')->middleware('can:delete-collaborator');
-
         Route::middleware('can:edit-collaborator')->group(function($router) {
             Route::put('/', 'CollaboratorController@update');
 
@@ -57,11 +55,26 @@ Route::group([ 'middleware' => 'auth:api', 'prefix' => 'collaborators', 'namespa
                 Route::put('/{leave}', 'LeaveController@update');
                 Route::delete('/{leave}', 'LeaveController@destroy');
             });
+            
+            Route::delete('/', 'CollaboratorController@destroy')->middleware('can:delete-collaborator');
         });
     });
 });
 
-Route::get('/departments', 'DepartmentController@index');
-Route::post('/departments', 'DepartmentController@store');
-Route::post('/departments/{department}', 'DepartmentController@getUsers');
-Route::delete('/departments/{department}', 'DepartmentController@destroy');
+Route::middleware('auth:api, can:edit-collaborator')->group(function($router) {
+    // !Data validation
+    Route::namespace('Collaborators')->group(function($router) {
+        Route::post('/validate/leave', 'LeaveController@isValid');
+        Route::post('/validate/skill', 'SkillController@isValid');
+        Route::post('/validate/training', 'TrainingController@isValid');
+        Route::post('/validate/evaluation', 'EvaluationController@isValid');
+    });
+    // ?Manage departments
+    Route::post('/departments', 'DepartmentController@store');
+    Route::post('/departments/{department}', 'DepartmentController@getUsers');
+    Route::delete('/departments/{department}', 'DepartmentController@destroy');
+});
+
+Route::get('/departments', 'DepartmentController@index')->middleware('auth:api, can:view-collaborator');
+
+Route::middleware('auth:api')->post('/account/update', 'UserController@update');

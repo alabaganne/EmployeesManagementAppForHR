@@ -8,11 +8,12 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Leave;
 
-class LeavesController extends Controller
+class LeaveController extends Controller
 {
     // ! Validate Leave
     private function validateLeave($request) {
         return $request->validate([
+            'type' => 'required|regex:' . $this->custom_regex,
             'days' => 'required|integer'
         ]);
     }
@@ -81,5 +82,11 @@ class LeavesController extends Controller
         return response()->json([
             'message' => 'Leave deleted.'
         ], 200);
+    }
+
+    public function isValid(Request $request) {
+        $this->validateLeave($request);
+
+        return response()->json([], 200);
     }
 }

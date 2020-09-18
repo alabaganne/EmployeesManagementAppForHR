@@ -18,6 +18,7 @@ class CreateSkillsTable extends Migration
             $table->string('name');
             $table->float('note');
             $table->timestamps();
+            // !user_id FOREIGN KEY is added on a seperate migration file
         });
     }
 
@@ -26,8 +27,8 @@ class CreateSkillsTable extends Migration
      *
      * @return void
      */
-    public function down()
-    {
-        Schema::dropIfExists('skills');
-    }
+    // public function down()
+    // {
+    //     Schema::dropIfExists('skills');
+    // }
 }

@@ -8,13 +8,13 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Skill;
 
-class SkillsController extends Controller
+class SkillController extends Controller
 {
     // ! Validate skill
     private function validateSkill($request) {
         return $request->validate([
-            'name' => 'required',
-            'note' => 'required|integer'
+            'name' => 'required|regex:' . $this->custom_regex,
+            'note' => 'required|integer|max:10'
         ]);
     }
 
@@ -83,5 +83,11 @@ class SkillsController extends Controller
         return response()->json([
             'message' => "A skill has been deleted successfully."
         ], 200);
+    }
+
+    public function isValid(Request $request) {
+        $this->validateSkill($request);
+
+        return response()->json([], 200);
     }
 }

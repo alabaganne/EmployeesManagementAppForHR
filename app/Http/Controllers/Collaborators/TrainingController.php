@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Collaborators;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class TrainingsController extends Controller
+class TrainingController extends Controller
 {
     private function validateTraining($request) {
         $request->validate([
-            'name' => 'required',
-            'duration' => 'required|integer' // ! hours: integer
+            'entitled' => 'required|regex:' . $this->custom_regex,
+            'start_date' => 'required|date',
+            'duration' => 'required|integer',
+            'note' => 'required|numeric'
         ]);
     }
 
@@ -24,8 +26,10 @@ class TrainingsController extends Controller
         
         $training = new Training();
 
-        $training->name = $validatedData['name'];
+        $training->entitled = $validatedData['entitled'];
+        $training->start_date = $validatedData['start_date'];
         $training->duration = $validatedData['duration'];
+        $training->note = $validatedData['note'];
         $training->user_id = $user->id;
 
         $training->save();
@@ -40,9 +44,7 @@ class TrainingsController extends Controller
             $this->validateTraining($request)
         );
         
-        return response()->json([
-            'message' => 'Training updated.'
-        ], 200);
+        return response()->json([], 200);
     }
 
     public function destroy(Training $training) {
@@ -50,6 +52,12 @@ class TrainingsController extends Controller
             $this->validateTraining($request)
         );
 
-        return response()->json([ 'message' => 'User training deleted.' ], 200);
+        return response()->json([], 200);
+    }
+
+    public function isValid(Request $request) {
+        $this->validateTraining($request);
+
+        return response()->json([], 200);
     }
 }

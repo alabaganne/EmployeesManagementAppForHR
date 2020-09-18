@@ -15,7 +15,7 @@ class CreateEvaluationsTable extends Migration
     {
         Schema::create('evaluations', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
+            $table->string('type'); // ?may be "enum"
             $table->string('manager');
             $table->date('date');
             $table->string('status');
