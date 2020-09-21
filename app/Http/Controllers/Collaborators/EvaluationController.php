@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Collaborators;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\User;
+use App\Evaluation;
+
 class EvaluationController extends Controller
 {
-    // ! Validate Evaluation
+    // validate Evaluation
     private function validateEvaluation($request) {
         return $request->validate([
             'type' => 'required',
@@ -49,9 +52,7 @@ class EvaluationController extends Controller
 
         $evaluation->save();
 
-        return response()->json([
-            'message' => 'An evaluation has been added for ' . $user->name . '.'
-        ], 201);
+        return response()->json([], 201);
     }
 
     /**
@@ -67,9 +68,7 @@ class EvaluationController extends Controller
             $this->validateEvaluation($request)
         );
         
-        return response()->json([
-            'message' => 'Evaluation has been updated successfully.'
-        ], 200);
+        return response()->json([], 200);
     }
 
     /**
@@ -78,13 +77,11 @@ class EvaluationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user, Evaluation $evaluation)
+    public function destroy(Evaluation $evaluation)
     {
         $evaluation->delete();
         
-        return response()->json([
-            'message' => 'Evaluation for ' . $user->name . ' has been deleted successfully.'
-        ], 200);
+        return response()->json([], 200);
     }
 
     public function isValid(Request $request) {

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Department;
+use App\User;
 
 class DepartmentController extends Controller
 {
@@ -16,7 +17,12 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        return response()->json(Department::all(), 200);
+        $departments_names = [];
+        foreach(Department::all() as $department) {
+            array_push($departments_names, $department);
+        }
+        
+        return response()->json($departments_names, 200);
     }
 
     /**
@@ -33,16 +39,12 @@ class DepartmentController extends Controller
             ])
         );
         
-        return response()->json([
-            'message' => 'Department created.'
-        ], 201);
+        return response()->json([], 201);
     }
 
     // * Get the collaborators that belongs to a specific department
     public function getUsers(Department $department) {
-        return response()->json(
-            User::where('department_id', $department->id)->get(), 200
-        );
+        return response()->json(User::where('department_id', $department->id)->get(), 200);
     }
 
     /**
@@ -55,8 +57,6 @@ class DepartmentController extends Controller
     {
         $department->delete();
 
-        return response()->json([
-            'message' => 'Department deleted.'
-        ], 200);
+        return response()->json([], 200);
     }
 }

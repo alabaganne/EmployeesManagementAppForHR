@@ -15,15 +15,15 @@ class CollaboratorController extends Controller
     private function validateCollaborator($request) {
         return $request->validate([
             'name' => 'required|regex:' . $this->custom_regex,
-            'username' => 'required|alpha|unique:users,username',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8',
+            'username' => 'nullable|alphanum|unique:users,username',
+            'email' => 'required|email|unique:users,email,' . $request->id,
+            'password' => 'nullable|min:8',
             'phone_number' => 'required|numeric',
             'date_of_birth' => 'nullable|date',
             'address' => '',
             'civil_status' => 'in:single,married',
             'gender' => Rule::in(['male', 'female']),
-            'id_card_number' => 'nullable|numeric|unique:users,id_card_number',
+            'id_card_number' => 'required|numeric|unique:users,id_card_number,' . $request->id,
             'nationality' => 'nullable|alpha',
             'university' => 'nullable|regex:' . $this->custom_regex,
             'history' => '',
@@ -57,9 +57,8 @@ class CollaboratorController extends Controller
     }
     
     public function show(User $user) {
-        return response()->json([
-            'collaborator' => $user
-        ], 200);
+        $user->department;
+        return response()->json($user, 200);
     }
 
     public function store(Request $request) {

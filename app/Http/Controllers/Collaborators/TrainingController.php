@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Collaborators;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\User;
+use App\Training;
+
 class TrainingController extends Controller
 {
     private function validateTraining($request) {
-        $request->validate([
+        return $request->validate([
             'entitled' => 'required|regex:' . $this->custom_regex,
             'start_date' => 'required|date',
             'duration' => 'required|integer',
@@ -17,8 +20,9 @@ class TrainingController extends Controller
     }
 
     public function index(User $user) {
-        return response()
-            ->json(Training::where('user_id', $user->id)->get(), 200);
+        return response()->json(
+            Training::where('user_id', $user->id)->get(), 200
+        );
     }
 
     public function store(Request $request, User $user) {
@@ -34,9 +38,7 @@ class TrainingController extends Controller
 
         $training->save();
 
-        return response()->json([
-            'message' => 'Training created.'
-        ], 201);
+        return response()->json([], 201);
     }
 
     public function update(Request $request, Training $training) {
@@ -48,9 +50,7 @@ class TrainingController extends Controller
     }
 
     public function destroy(Training $training) {
-        $training->update(
-            $this->validateTraining($request)
-        );
+        $training->delete();
 
         return response()->json([], 200);
     }

@@ -10,7 +10,7 @@ use App\Leave;
 
 class LeaveController extends Controller
 {
-    // ! Validate Leave
+    // validate Leave
     private function validateLeave($request) {
         return $request->validate([
             'type' => 'required|regex:' . $this->custom_regex,
@@ -24,9 +24,7 @@ class LeaveController extends Controller
      */
     public function index(User $user)
     {
-        return response()->json([
-            'leaves' => Leave::where('user_id', $user->id)->get()
-        ]);
+        return response()->json(Leave::where('user_id', $user->id)->get(), 200);
     }
 
     /**
@@ -41,14 +39,13 @@ class LeaveController extends Controller
 
         $leave = new Leave();
 
+        $leave->type = $validatedData['type'];
         $leave->days = $validatedData['days'];
         $leave->user_id = $user->id;
 
         $leave->save();
 
-        return response()->json([
-            'message' => 'Leave created.'
-        ]);
+        return response()->json([], 201);
     }
 
     /**
@@ -64,9 +61,7 @@ class LeaveController extends Controller
             $this->validateLeave($request)
         );
         
-        return response()->json([
-            'message' => 'Leave updated.'
-        ], 200);
+        return response()->json([], 200);
     }
 
     /**
@@ -79,9 +74,7 @@ class LeaveController extends Controller
     {
         $leave->delete();
         
-        return response()->json([
-            'message' => 'Leave deleted.'
-        ], 200);
+        return response()->json([], 200);
     }
 
     public function isValid(Request $request) {

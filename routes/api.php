@@ -14,42 +14,45 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group([ 'middleware' => 'api', 'prefix' => 'auth' ], function ($router) {
+Route::group([ 'middleware' => 'api', 'prefix' => 'auth' ], function () {
     Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
     Route::get('me', 'AuthController@me');
 });
 
-Route::group([ 'middleware' => 'auth:api', 'prefix' => 'collaborators', 'namespace' => 'Collaborators' ], function($router) {
-    Route::post('/', 'CollaboratorController@index')->middleware('can:view-collaborator');
-    route::post('/create', 'CollaboratorController@store')->middleware('can:add-collaborator'); // ! /api/collaborators/add
-    Route::prefix('/{user}')->group(function($router) {
-        Route::middleware('can:edit-collaborator')->group(function($router) {
-            Route::put('/', 'CollaboratorController@update');
+Route::group([ 'middleware' => 'auth:api', 'prefix' => 'collaborators', 'namespace' => 'Collaborators' ], function() {
+    Route::middleware('can:view-collaborator')->group(function() {
+        Route::post('/', 'CollaboratorController@index');
+        Route::get('/{user}', 'CollaboratorController@show');
+    });
+    route::post('/create', 'CollaboratorController@store')->middleware('can:add-collaborator'); //? /api/collaborators/create
+    Route::prefix('/{user}')->group(function() {
+        Route::middleware('can:edit-collaborator')->group(function() {
+            Route::put('/', 'CollaboratorController@update'); //? /api/collaborators/{user_id}
 
-            Route::prefix('/trainings')->group(function($router) {
+            Route::prefix('/trainings')->group(function() {
                 Route::get('/', 'TrainingController@index');
                 Route::post('/', 'TrainingController@store');
                 Route::put('/{training}', 'TrainingController@update');
                 Route::delete('/{training}', 'TrainingController@destroy');
             });
             
-            Route::prefix('/skills')->group(function($router) {
-                Route::get('/', 'SkillController@index');
+            Route::prefix('/skills')->group(function() {
+                Route::get('/', 'SkillController@index'); //? /collaborators/{user_id}/skills
                 Route::post('/', 'SkillController@store');
                 Route::put('/{skill}', 'SkillController@update');
-                Route::delete('/{skill}', 'SkillController@destroy');  // ? /collaborators/{collaborator_id}/skills/{skill_id}
+                Route::delete('/{skill}', 'SkillController@destroy');  //? /collaborators/{user_id}/skills/{skill_id}
             });
     
-            Route::prefix('/evaluations')->group(function($router) {
+            Route::prefix('/evaluations')->group(function() {
                 Route::get('/', 'EvaluationController@index');
                 Route::post('/', 'EvaluationController@store');
                 Route::put('/{evaluation}', 'EvaluationController@update');
                 Route::delete('/{evaluation}', 'EvaluationController@destroy');
             });
     
-            Route::prefix('leaves')->group(function($router) {
+            Route::prefix('leaves')->group(function() {
                 Route::get('/', 'LeaveController@index');
                 Route::post('/', 'LeaveController@store');
                 Route::put('/{leave}', 'LeaveController@update');
@@ -61,9 +64,9 @@ Route::group([ 'middleware' => 'auth:api', 'prefix' => 'collaborators', 'namespa
     });
 });
 
-Route::middleware('auth:api, can:edit-collaborator')->group(function($router) {
-    // !Data validation
-    Route::namespace('Collaborators')->group(function($router) {
+Route::middleware('auth:api, can:edit-collaborator')->group(function() {
+    // Data validation before adding data to table
+    Route::namespace('Collaborators')->group(function() {
         Route::post('/validate/leave', 'LeaveController@isValid');
         Route::post('/validate/skill', 'SkillController@isValid');
         Route::post('/validate/training', 'TrainingController@isValid');
@@ -75,6 +78,6 @@ Route::middleware('auth:api, can:edit-collaborator')->group(function($router) {
     Route::delete('/departments/{department}', 'DepartmentController@destroy');
 });
 
-Route::get('/departments', 'DepartmentController@index')->middleware('auth:api, can:view-collaborator');
+Route::get('/departments', 'DepartmentController@index')->middleware('auth:api');
 
 Route::middleware('auth:api')->post('/account/update', 'UserController@update');

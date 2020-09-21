@@ -25,9 +25,7 @@ class SkillController extends Controller
      */
     public function index(User $user)
     {
-        return response()->json(
-            Skill::where('user_id', $user->id)->get(), 200
-        );
+        return response()->json(Skill::where('user_id', $user->id)->get(), 200);
     }
 
     /**
@@ -47,9 +45,7 @@ class SkillController extends Controller
 
         $skill->save();
 
-        return response()->json([
-            'message' => 'A new skill has been added to ' . $user->name
-        ], 201);
+        return response()->json([], 201);
     }
 
     /**
@@ -65,9 +61,7 @@ class SkillController extends Controller
             $this->validateSkill($request)
         );
 
-        return response()->json([
-            'message' => 'Skill for ' . $user->name . ' has been updated.'
-        ], 200);
+        return response()->json([], 200);
     }
 
     /**
@@ -80,9 +74,7 @@ class SkillController extends Controller
     {
         $skill->delete();
 
-        return response()->json([
-            'message' => "A skill has been deleted successfully."
-        ], 200);
+        return response()->json([], 200);
     }
 
     public function isValid(Request $request) {

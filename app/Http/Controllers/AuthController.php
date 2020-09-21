@@ -45,7 +45,19 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        $user = auth()->user();
+
+        $permissions = [];
+        foreach($user->getAllPermissions() as $permission) {
+            array_push($permissions, $permission->name);
+        }
+        $role = $user->getRoleNames()->first();
+
+        return response()->json([
+            'data' => $user,
+            'role' => $role ? $role : 'Employee',
+            'permissions' => $permissions
+        ], 200);
     }
 
     /**
