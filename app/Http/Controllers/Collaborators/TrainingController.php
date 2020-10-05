@@ -3,37 +3,37 @@
 namespace App\Http\Controllers\Collaborators;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
-use App\User;
-use App\Training;
+use App\Models\User;
+use App\Models\Training;
+
+use App\Http\Requests\Training as TrainingRequest;
+use App\Http\Resources\TrainingResource;
 
 class TrainingController extends Controller
 {
-    private function validateTraining($request) {
-        return $request->validate([
-            'entitled' => 'required|regex:' . $this->custom_regex,
-            'start_date' => 'required|date',
-            'duration' => 'required|integer',
-            'note' => 'required|numeric'
-        ]);
+    public function __construct() {
+        $this->middleware('can:edit-collaborator')
+            ->only('store, update');
     }
 
     public function index(User $user) {
         return response()->json(
-            Training::where('user_id', $user->id)->get(), 200
+            TrainingResource::collection(
+                Training::where('user_id', $user->id)->get()
+            ), 200
         );
     }
 
-    public function store(Request $request, User $user) {
-        $validatedData = $this->validateTraining($request);
+    public function store(TrainingRequest $request, User $user) {
+        $validated = $request->validated();
         
         $training = new Training();
 
-        $training->entitled = $validatedData['entitled'];
-        $training->start_date = $validatedData['start_date'];
-        $training->duration = $validatedData['duration'];
-        $training->note = $validatedData['note'];
+        $training->entitled = $validated['entitled'];
+        $training->start_date = $validated['start_date'];
+        $training->duration = $validated['duration'];
+        $training->note = $validated['note'];
         $training->user_id = $user->id;
 
         $training->save();
@@ -41,9 +41,9 @@ class TrainingController extends Controller
         return response()->json([], 201);
     }
 
-    public function update(Request $request, Training $training) {
+    public function update(TrainingRequest $request, User $user, Training $training) {
         $training->update(
-            $this->validateTraining($request)
+            $request->validated()
         );
         
         return response()->json([], 200);
@@ -55,9 +55,5 @@ class TrainingController extends Controller
         return response()->json([], 200);
     }
 
-    public function isValid(Request $request) {
-        $this->validateTraining($request);
-
-        return response()->json([], 200);
-    }
+    
 }

@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('username')->unique()->nullable();
             $table->string('email')->unique();
-            $table->string('password');
+            $table->string('password')->default('12345678');
             $table->string('phone_number')->unique()->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('address')->nullable();
@@ -37,7 +37,7 @@ class CreateUsersTable extends Migration
             $table->enum('type_of_contract', ['option 1', 'option 2', 'option 3'])->nullable();
             $table->integer('allowed_leave_days')->nullable();
             // !department_id FOREIGN KEY is added on a seperate migration file
-            // $table->string('profile_photo');
+            $table->string('image_path')->default('storage/images/default-avatar.png');
             $table->rememberToken();
             $table->timestamps();
         });

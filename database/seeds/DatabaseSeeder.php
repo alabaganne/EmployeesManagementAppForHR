@@ -15,8 +15,8 @@ class DatabaseSeeder extends Seeder
 
         $departments = ['Web', 'Mobile', 'AI', 'Data Science', 'UI Design'];
         foreach($departments as $department) {
-            App\Department::create(['name' => $department]);
+            App\Models\Department::create(['name' => $department]);
         }
-        factory(App\User::class, 15)->create();
+        factory(App\Models\User::class, 15)->create();
     }
 }

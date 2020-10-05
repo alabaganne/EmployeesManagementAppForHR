@@ -25,13 +25,14 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::before(function($user) {
+        Gate::before(function(\App\Models\User $user) {
             if($user->isAdmin()) {
                 return true;
             }
         });
         
         Gate::define('view-collaborator', 'App\Policies\CollaboratorPolicy@index');
+        Gate::define('view-profile', 'App\Policies\CollaboratorPolicy@show');
         Gate::define('add-collaborator', 'App\Policies\CollaboratorPolicy@store');
         Gate::define('edit-collaborator', 'App\Policies\CollaboratorPolicy@update');
         Gate::define('delete-collaborator', 'App\Policies\CollaboratorPolicy@destroy');

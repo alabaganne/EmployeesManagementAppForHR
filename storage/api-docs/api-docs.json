@@ -1,0 +1,1094 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "HR Management App API Documentation",
+        "contact": {
+            "email": "alabaganne9@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000"
+        }
+    ],
+    "paths": {
+        "/api/collaborators/{user_id}": {
+            "get": {
+                "tags": [
+                    "Collaborators"
+                ],
+                "summary": "Collaborator details",
+                "description": "Get collaborator informations",
+                "operationId": "show",
+                "responses": {
+                    "200": {
+                        "description": "Collaborator details response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "": {
+                                            "$ref": "#/components/schemas/user"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Collaborators"
+                ],
+                "summary": "Edit collaborator",
+                "description": "Edit an existing collaborator",
+                "operationId": "store",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/collaboratorRequestBody"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/success"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/invalid-data"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Collaborators"
+                ],
+                "summary": "Delete collaborator",
+                "description": "Delete a collaborator",
+                "operationId": "App\\Http\\Controllers\\Collaborators\\CollaboratorController::destroy",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/user_id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/success"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/user_id"
+                }
+            ]
+        },
+        "/api/collaborators/{user_id}/leaves": {
+            "get": {
+                "tags": [
+                    "Leaves"
+                ],
+                "summary": "Get user leaves",
+                "description": "Get all user leaves",
+                "operationId": "App\\Http\\Controllers\\Collaborators\\LeaveController::index",
+                "responses": {
+                    "200": {
+                        "description": "User leaves",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/leave"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Leaves"
+                ],
+                "summary": "Add a new leave to a user",
+                "description": "Add a new leave to a user",
+                "operationId": "App\\Http\\Controllers\\Collaborators\\LeaveController::store",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/leaveRequestBody"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/success"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/user_id"
+                }
+            ]
+        },
+        "/api/collaborators/{user_id}/leaves/{leave_id}": {
+            "put": {
+                "tags": [
+                    "Leaves"
+                ],
+                "summary": "Update user leave",
+                "description": "Update specified user leave",
+                "operationId": "App\\Http\\Controllers\\Collaborators\\LeaveController::update",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/leaveRequestBody"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/success"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Leaves"
+                ],
+                "summary": "Delete a specified leave from storage",
+                "description": "Delete a specified leave from storage",
+                "operationId": "App\\Http\\Controllers\\Collaborators\\LeaveController::destroy",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/leaveRequestBody"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/success"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/user_id"
+                },
+                {
+                    "$ref": "#/components/parameters/leave_id"
+                }
+            ]
+        },
+        "/api/collaborators/{user_id}/skills": {
+            "get": {
+                "tags": [
+                    "Skills"
+                ],
+                "summary": "User skills",
+                "description": "Get user skills",
+                "operationId": "App\\Http\\Controllers\\Collaborators\\SkillController::index",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/skillRequestBody"
+                },
+                "responses": {
+                    "200": {
+                        "description": "User skills list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/skill"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/invalid-data"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Skills"
+                ],
+                "summary": "Assign a skill to a user",
+                "description": "Assign a skill to a user",
+                "operationId": "App\\Http\\Controllers\\Collaborators\\SkillController::store",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/skillRequestBody"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/success"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/invalid-data"
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/user_id"
+                }
+            ]
+        },
+        "/api/collaborators/{user_id}/skills/{skill_id}": {
+            "put": {
+                "tags": [
+                    "Skills"
+                ],
+                "summary": "Edit user skill",
+                "description": "Update a skill for a user",
+                "operationId": "App\\Http\\Controllers\\Collaborators\\SkillController::update",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/skillRequestBody"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/success"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/invalid-data"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Skills"
+                ],
+                "summary": "Revoke a skill from a user",
+                "description": "Revoke a skill to a user and delete it if no user still have it",
+                "operationId": "App\\Http\\Controllers\\Collaborators\\SkillController::destroy",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/success"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/user_id"
+                },
+                {
+                    "$ref": "#/components/parameters/skill_id"
+                }
+            ]
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login",
+                "description": "Authenticate a user with email and password",
+                "operationId": "login",
+                "requestBody": {
+                    "description": "User credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "johndoe@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Password1234"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYwMTA3MTg1OSwiZXhwIjoxNjAxMTU4MjU5LCJuYmYiOjE2MDEwNzE4NTksImp0aSI6Ik9YeTdieXI3UGpkNnBaZ1kiLCJzdWIiOjMsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.ewMSg-07JHs6YxKME0UdNMYI0CvhaE9XeWEWOSRgHRE"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "bearer"
+                                        },
+                                        "expires_in": {
+                                            "type": "integer",
+                                            "example": 86400
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The provided credentials are incorrect."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/invalid-data"
+                    }
+                }
+            }
+        },
+        "api/auth/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User informations",
+                "description": "Get current user informations",
+                "operationId": "me",
+                "responses": {
+                    "200": {
+                        "description": "User information",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/user"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout",
+                "description": "Logout current user",
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "Logout response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "example": "Successfully logged out"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    }
+                }
+            }
+        },
+        "/api/collaborators": {
+            "post": {
+                "tags": [
+                    "Collaborators"
+                ],
+                "summary": "Get list of collaborators",
+                "description": "Get paginated list of collaborators",
+                "operationId": "index",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/searchRequestBody"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/paginatedCollaborators"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/invalid-data"
+                    }
+                }
+            }
+        },
+        "/api/collaborators/create": {
+            "post": {
+                "tags": [
+                    "Collaborators"
+                ],
+                "summary": "Add a new collaborator",
+                "description": "Create a new collaborator",
+                "operationId": "store",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/collaboratorRequestBody"
+                },
+                "responses": {
+                    "201": {
+                        "description": "Collaborator created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "collaborator_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/invalid-data"
+                    }
+                }
+            }
+        },
+        "/api/collaborators/gender": {
+            "get": {
+                "tags": [
+                    "Collaborators"
+                ],
+                "summary": "Number of collaborators per gender",
+                "description": "Number of collaborators for each gender",
+                "operationId": "App\\Http\\Controllers\\Collaborators\\CollaboratorController::collaboratorsNumberByGender",
+                "responses": {
+                    "200": {
+                        "description": "Number of collaborators per gender",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "male": {
+                                            "type": "integer",
+                                            "example": 7
+                                        },
+                                        "female": {
+                                            "type": "integer",
+                                            "example": 6
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/collaborators/department": {
+            "get": {
+                "tags": [
+                    "Collaborators"
+                ],
+                "summary": "Number of collaborators per department",
+                "description": "Number of collaborators for each department",
+                "operationId": "App\\Http\\Controllers\\Collaborators\\CollaboratorController::collaboratorsNumberByDepartment",
+                "responses": {
+                    "200": {
+                        "description": "Number of collaborators per department",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Web": {
+                                            "type": "integer",
+                                            "example": 5
+                                        },
+                                        "Mobile": {
+                                            "type": "integer",
+                                            "example": 4
+                                        },
+                                        "AI": {
+                                            "type": "integer",
+                                            "example": 2
+                                        },
+                                        "Data Science": {
+                                            "type": "integer",
+                                            "example": 3
+                                        },
+                                        "Design": {
+                                            "type": "integer",
+                                            "example": 2
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/collaborators/archive": {
+            "get": {
+                "tags": [
+                    "Collaborators"
+                ],
+                "summary": "Collaborators from the archive",
+                "description": "Collaborators from the archive",
+                "operationId": "App\\Http\\Controllers\\Collaborators\\CollaboratorController::archive",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/paginatedCollaborators"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/collaborators/{user_id}/restore": {
+            "get": {
+                "tags": [
+                    "Collaborators"
+                ],
+                "summary": "Restore a collaborator",
+                "description": "Restore a collaborator",
+                "operationId": "App\\Http\\Controllers\\Collaborators\\CollaboratorController::restore",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/user_id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User restored."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/collaborators/{user_id}/delete-permantly": {
+            "delete": {
+                "tags": [
+                    "Collaborators"
+                ],
+                "summary": "Delete a collaborator permantly",
+                "description": "Delete a collaborator permantly from the database",
+                "operationId": "App\\Http\\Controllers\\Collaborators\\CollaboratorController::deletePermantly",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/user_id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User permantly deleted."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/unauthenticated"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/unauthorized"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "leave": {
+                "title": "Leave",
+                "description": "Leave object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "option 1",
+                            "option 2",
+                            "option 3"
+                        ]
+                    },
+                    "days": {
+                        "type": "integer",
+                        "example": 3
+                    }
+                },
+                "type": "object"
+            },
+            "skill": {
+                "title": "Skill",
+                "description": "Skill object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Laravel"
+                    },
+                    "note": {
+                        "type": "integer",
+                        "maximum": 10,
+                        "example": 10
+                    }
+                },
+                "type": "object"
+            },
+            "user": {
+                "title": "User",
+                "description": "User object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Ala Baganne"
+                    },
+                    "username": {
+                        "type": "string",
+                        "example": "alabaganne"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "alabaganne9@gmail.com"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "phone_number": {
+                        "type": "string",
+                        "example": "50101959"
+                    },
+                    "date_of_birth": {
+                        "type": "string",
+                        "format": "dateTime",
+                        "example": "1999-12-16"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "type": "string",
+                        "enum": [
+                            "male",
+                            "female"
+                        ]
+                    },
+                    "civil_status": {
+                        "enum": [
+                            "single",
+                            "married"
+                        ]
+                    },
+                    "id_card_number": {
+                        "type": "string"
+                    },
+                    "nationality": {
+                        "type": "string",
+                        "example": "Tunisian"
+                    },
+                    "university": {
+                        "type": "string",
+                        "example": "Higher institute of applied science and technology of sousse"
+                    },
+                    "history": {
+                        "type": "string"
+                    },
+                    "experience_level": {
+                        "type": "integer",
+                        "maximum": 5,
+                        "example": 4
+                    },
+                    "source": {
+                        "type": "string"
+                    },
+                    "position": {
+                        "type": "string",
+                        "example": "Full stack web developer"
+                    },
+                    "grade": {
+                        "type": "string"
+                    },
+                    "hiring_date": {
+                        "type": "string",
+                        "format": "dateTime"
+                    },
+                    "contract_end_date": {
+                        "type": "string",
+                        "format": "dateTime"
+                    },
+                    "type_of_contract": {
+                        "type": "string",
+                        "enum": [
+                            "option 1",
+                            "option 2",
+                            "option 3"
+                        ]
+                    },
+                    "allowed_leave_days": {
+                        "type": "integer",
+                        "default": 30
+                    },
+                    "department_id": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "responses": {
+            "paginatedCollaborators": {
+                "description": "Paginated list of collaborators",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/user"
+                                    }
+                                },
+                                "links": {
+                                    "properties": {
+                                        "first": {
+                                            "type": "string",
+                                            "example": "http://127.0.0.1:8000/api/_ROUTE_?page=1"
+                                        },
+                                        "last": {
+                                            "type": "string",
+                                            "example": "http://127.0.0.1:8000/api/_ROUTE_?page=20"
+                                        },
+                                        "prev": {
+                                            "type": "string",
+                                            "example": "http://127.0.0.1:8000/api/_ROUTE_?page=11"
+                                        },
+                                        "next": {
+                                            "type": "string",
+                                            "example": "http://127.0.0.1:8000/api/_ROUTE_?page=13"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "meta": {
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 12
+                                        },
+                                        "last_page": {
+                                            "type": "integer",
+                                            "example": 20
+                                        },
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": 8
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 160
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "success": {
+                "description": "Successful operation",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {}
+                        }
+                    }
+                }
+            },
+            "unauthorized": {
+                "description": "Forbidden",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "example": "This action is unauthorized."
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "unauthenticated": {
+                "description": "Authentication is required",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "example": "Unauthenticated."
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "invalid-data": {
+                "description": "Invalid data",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "example": "The given data was invalid."
+                                },
+                                "error": {
+                                    "properties": {
+                                        "email": {
+                                            "type": "string",
+                                            "example": "The email must be a valid email address."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "leave_id": {
+                "name": "leave_id",
+                "in": "path",
+                "description": "Leave ID",
+                "required": true,
+                "schema": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            },
+            "skill_id": {
+                "name": "skill_id",
+                "in": "path",
+                "description": "Skill ID",
+                "required": true,
+                "schema": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            },
+            "user_id": {
+                "name": "user_id",
+                "in": "path",
+                "description": "The ID of the user",
+                "required": true,
+                "schema": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "requestBodies": {
+            "leaveRequestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/leave"
+                        }
+                    }
+                }
+            },
+            "skillRequestBody": {
+                "description": "Skill request",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/skill"
+                        }
+                    }
+                }
+            },
+            "collaboratorRequestBody": {
+                "description": "Collaborator request body",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/user"
+                        }
+                    }
+                }
+            },
+            "searchRequestBody": {
+                "description": "Search",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "search_text": {
+                                    "type": "string"
+                                },
+                                "items_per_page": {
+                                    "type": "integer",
+                                    "example": 10
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Authentication routes"
+        },
+        {
+            "name": "Collaborators",
+            "description": "Everything about collaborators"
+        },
+        {
+            "name": "Skills",
+            "description": "Manage user skills routes"
+        }
+    ],
+    "security": [
+        []
+    ]
+}

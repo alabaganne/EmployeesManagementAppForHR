@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUserToSkillsTable extends Migration
+class AddDeletedAddToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddUserToSkillsTable extends Migration
      */
     public function up()
     {
-        Schema::table('skills', function (Blueprint $table) {
-            $table->foreignId('user_id')->constrained();
+        Schema::table('users', function (Blueprint $table) {
+            $table->softDeletes();
         });
     }
 
@@ -25,8 +25,8 @@ class AddUserToSkillsTable extends Migration
      */
     public function down()
     {
-        Schema::table('skills', function (Blueprint $table) {
-            //
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropSoftDeletes();
         });
     }
 }

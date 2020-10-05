@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use App\User;
+use App\Models\User;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
@@ -25,7 +25,7 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::create(['name' => 'add collaborators']);
             Permission::create(['name' => 'edit collaborators']);
             Permission::create(['name' => 'delete collaborators']);
-            Permission::create(['name' => 'manage accounts']); // ! specific for the manager (super admin)
+            Permission::create(['name' => 'manage accounts']); // specific for the manager (super admin)
 
         } catch(Throwable $e) {
             report($e);

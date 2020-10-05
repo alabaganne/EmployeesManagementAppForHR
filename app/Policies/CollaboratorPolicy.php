@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CollaboratorPolicy
@@ -20,11 +20,11 @@ class CollaboratorPolicy
     }
 
     public function index(User $user) {
-        return $user->hasPermissionTo('view collaborators');
+        return $user->hasPermissionTo('view collaborators') || auth()->user()->id === $user->id;
     }
 
     public function store(User $user) {
-        return $user->hasPermissionTo('add collaborators');
+        return $user->hasPermissionTo('add collaborators') || auth()->user()->id === $user->id;
     }
 
     public function update(User $user) {

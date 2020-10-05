@@ -2,9 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\User;
+use App\Models\User;
 use Faker\Generator as Faker;
-use Illuminate\Support\Str;
+
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,9 +21,10 @@ use Illuminate\Support\Str;
 $factory->define(User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
+        'username' => $faker->userName,
         'email' => $faker->unique()->safeEmail,
         // 'email_verified_at' => now(),
-        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+        'password' => Hash::make('password'),
         // 'remember_token' => Str::random(10),
         'phone_number' => $faker->randomNumber(8),
         'date_of_birth' => $faker->dateTime,
@@ -40,6 +42,6 @@ $factory->define(User::class, function (Faker $faker) {
         'hiring_date' => now(),
         'contract_end_date' => $faker->dateTime(mktime(date('Y') + 20)),
         'allowed_leave_days' => random_int(10, 30),
-        'department_id' => rand(1, count(App\Department::all())),
+        'department_id' => rand(1, count(App\Models\Department::all())),
     ];
 });

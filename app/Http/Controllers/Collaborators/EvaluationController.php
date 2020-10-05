@@ -3,21 +3,17 @@
 namespace App\Http\Controllers\Collaborators;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
-use App\User;
-use App\Evaluation;
+use App\Models\User;
+use App\Models\Evaluation;
+use App\Http\Requests\Evaluation as EvaluationRequest;
+use App\Http\Resources\EvaluationResource;
 
 class EvaluationController extends Controller
 {
-    // validate Evaluation
-    private function validateEvaluation($request) {
-        return $request->validate([
-            'type' => 'required',
-            'manager' => 'required|regex:' . $this->custom_regex,
-            'date' => 'required|date',
-            'status' => 'required',
-        ]);
+    public function __construct() {
+        $this->middleware('can:edit-collaborator')
+            ->only('store, update');
     }
     /**
      * Display a listing of the resource.
@@ -27,7 +23,9 @@ class EvaluationController extends Controller
     public function index(User $user)
     {
         return response()->json(
-            Evaluation::where('user_id', $user->id)->get(),
+            EvaluationResource::collection(
+                Evaluation::where('user_id', $user->id)->get()
+            ),
             200
         );
     }
@@ -38,16 +36,16 @@ class EvaluationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, User $user)
+    public function store(EvaluationRequest $request, User $user)
     {
-        $validatedData = $this->validateEvaluation($request);
+        $validated = $request->validated();
 
         $evaluation = new Evaluation();
 
-        $evaluation->type = $validatedData['type'];
-        $evaluation->manager = $validatedData['manager'];
-        $evaluation->date = $validatedData['date'];
-        $evaluation->status = $validatedData['status'];
+        $evaluation->type = $validated['type'];
+        $evaluation->manager = $validated['manager'];
+        $evaluation->date = $validated['date'];
+        $evaluation->status = $validated['status'];
         $evaluation->user_id = $user->id;
 
         $evaluation->save();
@@ -62,11 +60,9 @@ class EvaluationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Evaluation $evaluation)
+    public function update(EvaluationRequest $request, User $user, Evaluation $evaluation)
     {
-        $evaluation->update(
-            $this->validateEvaluation($request)
-        );
+        $evaluation->update($request->validated());
         
         return response()->json([], 200);
     }
@@ -77,16 +73,10 @@ class EvaluationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Evaluation $evaluation)
+    public function destroy(User $user, Evaluation $evaluation)
     {
         $evaluation->delete();
         
-        return response()->json([], 200);
-    }
-
-    public function isValid(Request $request) {
-        $this->validateEvaluation($request);
-
         return response()->json([], 200);
     }
 }
