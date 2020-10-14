@@ -408,7 +408,7 @@
                 }
             }
         },
-        "api/auth/me": {
+        "/api/auth/me": {
             "get": {
                 "tags": [
                     "Auth"
@@ -1071,6 +1071,15 @@
                         }
                     }
                 }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "name": "bearerAuth",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
             }
         }
     },

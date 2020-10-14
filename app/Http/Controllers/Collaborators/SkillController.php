@@ -92,7 +92,6 @@ class SkillController extends Controller
         $validated = $request->validated();
 
         $skill = Skill::where('name', $validated['name'])->first();
-
         if(! $skill) {
             $skill = Skill::create(['name' => $validated['name']]);
         }

@@ -75,7 +75,7 @@ class AuthController extends Controller
 
     /**
      * @OA\Get(
-     *      path="api/auth/me",
+     *      path="/api/auth/me",
      *      tags={"Auth"},
      *      summary="User informations",
      *      description="Get current user informations",

@@ -96,7 +96,7 @@ class CollaboratorController extends Controller
      *      @OA\Response(response=422, ref="#/components/responses/invalid-data")
      * )
     */
-    public function index(SearchRequest $request) { // req body must include items_per_page
+    public function index(SearchRequest $request) { // request body must include items_per_page
         $validated = $request->validated();
 
         $collaborators = User::doesntHave('roles')

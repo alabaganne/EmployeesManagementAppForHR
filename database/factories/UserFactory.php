@@ -42,6 +42,7 @@ $factory->define(User::class, function (Faker $faker) {
         'hiring_date' => now(),
         'contract_end_date' => $faker->dateTime(mktime(date('Y') + 20)),
         'allowed_leave_days' => random_int(10, 30),
-        'department_id' => rand(1, count(App\Models\Department::all())),
+        // 'department_id' => rand(1, count(App\Models\Department::all())),
+        'department_id' => rand(1, 5),
     ];
 });
