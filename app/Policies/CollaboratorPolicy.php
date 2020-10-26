@@ -24,11 +24,11 @@ class CollaboratorPolicy
     }
 
     public function store(User $user) {
-        return $user->hasPermissionTo('add collaborators') || auth()->user()->id === $user->id;
+        return $user->hasPermissionTo('add collaborators');
     }
 
     public function update(User $user) {
-        return $user->hasPermissionTo('edit collaborators');
+        return $user->hasPermissionTo('edit collaborators') || auth()->user()->id === $user->id;
     }
 
     public function destroy(User $user) {
