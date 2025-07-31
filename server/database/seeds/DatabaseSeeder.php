@@ -28,6 +28,13 @@ class DatabaseSeeder extends Seeder
             $user->save();
         });
         
+        // Add 2 specific employees to Mobile department
+        $mobileDeptId = App\Models\Department::where('name', 'Mobile')->first()->id;
+        factory(App\Models\User::class, 2)->create()->each(function ($user) use ($mobileDeptId) {
+            $user->department_id = $mobileDeptId;
+            $user->save();
+        });
+        
         // Add skills, leaves, trainings, and evaluations to make it look like a real company
         $this->call(CompanyDataSeeder::class);
     }

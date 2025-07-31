@@ -19,6 +19,10 @@ php artisan jwt:secret --force
 # Generate application key if not exists
 php artisan key:generate --force
 
+# Create storage link
+echo "Creating storage link..."
+php artisan storage:link --force
+
 # Run database migrations
 echo "Running migrations..."
 php artisan migrate --force

@@ -37,7 +37,7 @@ class CreateUsersTable extends Migration
             $table->enum('type_of_contract', ['option 1', 'option 2', 'option 3'])->nullable();
             $table->integer('allowed_leave_days')->nullable();
             // !department_id FOREIGN KEY is added on a seperate migration file
-            $table->string('image_path')->default('');
+            $table->string('image_path')->default('storage/images/default-avatar.svg');
             $table->rememberToken();
             $table->timestamps();
         });

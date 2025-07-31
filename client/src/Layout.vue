@@ -29,7 +29,7 @@
             <div class="sidebar-header d-flex flex-column align-items-center px-3 pt-5 pb-4">
                 <img :src="user.image_path ? baseUrl + '/' + user.image_path : require('@/assets/images/avatar.svg')" class="rect rounded-circle shadow mb-3" alt="User Avatar">
                 <h3 class="font-weight-light text-warning mb-0">{{ user ? user.name : '' }}</h3>
-                <h5 class="text-capitalize">{{ user.role }}</h5>
+                <h5 class="text-capitalize text-center mt-2 h6">{{ user.role }}</h5>
             </div>
             <div class="sidebar-links">
                 <div id="accordion">

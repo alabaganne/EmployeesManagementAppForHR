@@ -10,7 +10,9 @@
       "Bash(docker-compose exec:*)",
       "Bash(cp:*)",
       "Bash(php artisan migrate:fresh:*)",
-      "Bash(composer install:*)"
+      "Bash(composer install:*)",
+      "Bash(php artisan:*)",
+      "Bash(docker-compose:*)"
     ],
     "deny": []
   }

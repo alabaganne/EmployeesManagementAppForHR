@@ -44,5 +44,6 @@ $factory->define(User::class, function (Faker $faker) {
         'allowed_leave_days' => random_int(10, 30),
         // 'department_id' => rand(1, count(App\Models\Department::all())),
         'department_id' => rand(1, 5),
+        'image_path' => 'storage/images/default-avatar.svg',
     ];
 });
