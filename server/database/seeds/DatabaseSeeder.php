@@ -11,12 +11,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(RolesAndPermissionsSeeder::class);
-
+        // Create departments first
         $departments = ['Web', 'Mobile', 'AI', 'Data Science', 'UI Design'];
+        $departmentIds = [];
         foreach($departments as $department) {
-            App\Models\Department::create(['name' => $department]);
+            $dept = App\Models\Department::create(['name' => $department]);
+            $departmentIds[] = $dept->id;
         }
-        factory(App\Models\User::class, 15)->create();
+        
+        // Call RolesAndPermissionsSeeder to create default users and roles
+        $this->call(RolesAndPermissionsSeeder::class);
+        
+        // Create 15 additional random users
+        factory(App\Models\User::class, 15)->create()->each(function ($user) use ($departmentIds) {
+            $user->department_id = $departmentIds[array_rand($departmentIds)];
+            $user->save();
+        });
+        
+        // Add skills, leaves, trainings, and evaluations to make it look like a real company
+        $this->call(CompanyDataSeeder::class);
     }
 }

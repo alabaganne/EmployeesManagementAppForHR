@@ -27,7 +27,7 @@
         </nav>
         <div v-if="user.permissions.includes('view collaborators')" id="sidebar" class="bg-dark text-light mt-5" :class="{ 'active': sidebar.active }">
             <div class="sidebar-header d-flex flex-column align-items-center px-3 pt-5 pb-4">
-                <img :src="'http://localhost:8000/' + user.image_path" class="rect rounded-circle shadow mb-3" alt="Ala Baganné">
+                <img :src="user.image_path ? baseUrl + '/' + user.image_path : require('@/assets/images/avatar.svg')" class="rect rounded-circle shadow mb-3" alt="User Avatar">
                 <h3 class="font-weight-light text-warning mb-0">{{ user ? user.name : '' }}</h3>
                 <h5 class="text-capitalize">{{ user.role }}</h5>
             </div>
@@ -73,7 +73,10 @@ export default {
     computed: {
         ...mapGetters({
             user: 'auth/user'
-        })
+        }),
+        baseUrl() {
+            return window.BASE_URL || 'http://localhost:8000';
+        }
     },
     methods: {
         ...mapActions({

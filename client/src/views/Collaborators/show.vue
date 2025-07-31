@@ -12,7 +12,7 @@
             <div class="grid-container d-xl-flex justify-content-between mb-4">
                 <div class="grid">
                     <div class="text-center d-sm-flex text-sm-left align-items-center mb-4">
-                        <img v-if="collaborator.image_path" :src="'http://localhost:8000/' + collaborator.image_path" class="rect rounded-circle shadow-sm mr-3 mb-3 mb-sm-0" :alt="collaborator.name">
+                        <img :src="collaborator.image_path ? baseUrl + '/' + collaborator.image_path : require('@/assets/images/avatar.svg')" class="rect rounded-circle shadow-sm mr-3 mb-3 mb-sm-0" :alt="collaborator.name">
                         <div>
                             <h1 class="text-primary font-weight-light mb-1">{{ collaborator.name }}</h1>
                             <h4 class="font-weight-light mb-1">{{ collaborator.department_name }} Department</h4>
@@ -99,7 +99,10 @@ export default {
     computed: {
         ...mapGetters({
             user: 'auth/user'
-        })
+        }),
+        baseUrl() {
+            return window.BASE_URL || 'http://localhost:8000';
+        }
     },
     mounted() {
         let collaboratorId = this.$route.params.id;

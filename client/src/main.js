@@ -9,8 +9,11 @@ require("@/store/subscriber");
 
 // axios
 import axios from "axios";
-axios.defaults.baseURL = "http://127.0.0.1:8000/api";
+axios.defaults.baseURL = process.env.VUE_APP_API_URL || "http://127.0.0.1:8000/api";
 window.axios = axios;
+
+// Make base URL globally available
+window.BASE_URL = process.env.VUE_APP_BASE_URL || "http://localhost:8000";
 // charts
 import Chart from 'chart.js'
 Chart.defaults.global.defaultFontFamily = "Comfortaa";
